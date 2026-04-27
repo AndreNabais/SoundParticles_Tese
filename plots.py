@@ -14,8 +14,8 @@ from pathlib import Path
 
 data_dir = Path(".")
 src = pd.read_csv(Path(data_dir, "source.csv"), names=["t", "amp"])
-left = pd.read_csv(Path(data_dir, "mic_left_moving.csv"), names=["t", "amp"])
-right = pd.read_csv(Path(data_dir, "mic_right_moving.csv"), names=["t", "amp"])
+left = pd.read_csv(Path(data_dir, "mic_left.csv"), names=["t", "amp"])
+right = pd.read_csv(Path(data_dir, "mic_right.csv"), names=["t", "amp"])
 
 # Combine data for easier plotting
 src["signal"] = "Source"
@@ -45,4 +45,5 @@ fig.write_html("signal_comparison.html", auto_open=True)
 
 #print(df["t"].head())
 #print(df["t"].describe())
+
 
