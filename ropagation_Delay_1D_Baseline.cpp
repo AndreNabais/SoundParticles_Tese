@@ -6,7 +6,14 @@
 #include <vector>
 #include <algorithm>
 #include <list>
+#include <fstream>
 using namespace std;
+
+void save_to_csv(const vector<float>& time, const vector<float>& data, const string& filename) {
+    ofstream file(filename);
+    for (size_t i = 0; i < time.size(); ++i)
+        file << time[i] << "," << data[i] << "\n";
+}
 
 class Source {
     private:
@@ -99,8 +106,49 @@ int main(){
     env.DelayTime();
     env.DelaySample(src);
     auto [micLeft, micRight] = mic.capture(src, env);
+    vector<float> buffer = src.buffer_source();
     cout << "Samples at microphone on the left: " << micLeft.size() << endl;
     cout << "Samples at microphone on the right: " << micRight.size() << endl;
-    return 0;
-    //to the sample number obtained for each mic we will have to reduce the sample number from the source
+    
+
+        //save csv files
+
+    ofstream src_file("./source.csv");
+
+
+        for (int i=0; i<buffer.size(); i++){
+            float time_source = static_cast<float>(i)/static_cast<float>(src.getSampleRate());
+            src_file << time_source << "," << buffer[i] << "\n";
+            };
+
+
+    src_file.close();
+
+
+    string filenames[2] = {"./mic_left.csv", "./mic_right.csv"};
+    ofstream ofs;
+
+            ofs.open(filenames[0]);
+            for (size_t i = 0; i < micLeft.size(); i++) {
+                float time_left = static_cast<float>(i)/static_cast<float>(src.getSampleRate());
+                ofs << time_left << "," << micLeft[i] << "\n"; //we use global_time here because microphone that is recording at a fixed rate, so we want to keep the time axis consistent with the source signal, which is also sampled at a fixed rate. The delay is already accounted for in the calculation of y_n_left, so we don't need to add it to the time axis when saving to CSV.
+            }
+
+        ofs.close();
+        cout << "Saved mic_left.csv with simulated movement!" << endl;
+
+
+
+        ofs.open(filenames[1]);
+            for (size_t i = 0; i < micRight.size(); i++) {
+                float time_right = static_cast<float>(i)/static_cast<float>(src.getSampleRate());
+                ofs << time_right << "," << micRight[i] << "\n"; //we use global_time here because microphone that is recording at a fixed rate, so we want to keep the time axis consistent with the source signal, which is also sampled at a fixed rate. The delay is already accounted for in the calculation of y_n_right, so we don't need to add it to the time axis when saving to CSV.
+            }
+
+        ofs.close();
+        cout << "Saved mic_right.csv with simulated movement!" << endl;
+
+        return 0;
+    
+
 }
