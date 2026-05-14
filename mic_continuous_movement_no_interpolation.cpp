@@ -146,9 +146,9 @@ class Microphones {
 
 
 int main(){
-
     // Record start time
     auto start = std::chrono::high_resolution_clock::now();
+
 
     int base_buffer_size = 512;
     int sample_rate = 44100;
@@ -213,15 +213,12 @@ int main(){
                 auto [delayLeft, _] = env_moving.DelayTime();
                 float time_left = global_time - delayLeft; //we subtract the delay from the global time to get the birth time of the sample that we want to capture at the current global time, which is the time when the sound was emitted from the source and started traveling towards the microphone. This is because we want to find out which sample from the source signal corresponds to the sound that is being captured by the microphone at the current global time, taking into account the time it takes for the sound to travel from the source to the microphone (the delay). By subtracting the delay from the global time, we can determine the birth time of that sample in the source signal, which allows us to perform interpolation and capture the correct amplitude value for that sample at the current global time.
 
-                //fractional delay interpolation for left mic
+                //we won't use interpolation for this version, we will just capture the sample that corresponds to the birth time of the sound at the microphone without performing interpolation, which means we will capture the amplitude value of the sample that is closest to the birth time without considering the fractional part of the delay. This will give us a more discrete representation of the captured sound at the microphone as it moves through space, without smoothing out the changes in amplitude that occur due to the movement and the corresponding changes in delay.
                 float n_float_left = time_left * src.getSampleRate();
-                int M_left = static_cast<int>(floor(n_float_left));
-                float frac_left = n_float_left - M_left;
+                int M_left = static_cast<int>(round(n_float_left));
 
                 if (M_left >= 0 && (M_left + 1) < buffer.size()) {
-                // This is y[n] = x[n-(M+1)]*frac + x[n-M]*(1-frac)
-                // Here, index is (M) and (M+1) because we already subtracted delay to get birth_time
-                y_n_left = buffer[M_left+1] * frac_left + buffer[M_left] * (1.0 - frac_left);
+                y_n_left = buffer[M_left];
                 time_left_storage.push_back(global_time);
                 amplitude_left_storage.push_back(y_n_left);
                 }
@@ -240,25 +237,24 @@ int main(){
     //right_file
     vector<float> time_right_storage;
     vector<float> amplitude_right_storage;
-        //for (size_t n = 0; n < nr_positions; n++) {    
-            //float burst_start_time = n * (static_cast<float>(buffer.size())/static_cast<float>(src.getSampleRate())+offset);
+
 
             for (int i=0; i<total_samples; i++){
                 float global_time = static_cast<float>(i)/static_cast<float>(src.getSampleRate());
-                float x_mic_right = env1.get_x_right() + 0.5*acceleration*global_time*global_time;
+                //float x_mic_left = env1.get_x_left() + velocity_left*global_time; //uniform velocity
+
+                //use initial velocity=0
+                float x_mic_right = env1.get_x_right() + 0.5*acceleration*global_time*global_time; //with acceleration, we can use the formula: x = x0 + v0*t + 0.5*a*t^2, where x0 is the initial position (env1.get_x_left()), v0 is the initial velocity (which is 0 in this case), a is the acceleration, and t is the global_time. This will give us the position of the left microphone at each time step, taking into account the acceleration of the movement.
                 Environment env_moving(0, 0, x_mic_right, 0, 0, 0, 0, 0, 0, 343);
                 auto [_, delayRight] = env_moving.DelayTime();
                 float time_right = global_time - delayRight; //we subtract the delay from the global time to get the birth time of the sample that we want to capture at the current global time, which is the time when the sound was emitted from the source and started traveling towards the microphone. This is because we want to find out which sample from the source signal corresponds to the sound that is being captured by the microphone at the current global time, taking into account the time it takes for the sound to travel from the source to the microphone (the delay). By subtracting the delay from the global time, we can determine the birth time of that sample in the source signal, which allows us to perform interpolation and capture the correct amplitude value for that sample at the current global time.
 
-                //fractional delay interpolation for left mic
+                //we won't use interpolation for this version, we will just capture the sample that corresponds to the birth time of the sound at the microphone without performing interpolation, which means we will capture the amplitude value of the sample that is closest to the birth time without considering the fractional part of the delay. This will give us a more discrete representation of the captured sound at the microphone as it moves through space, without smoothing out the changes in amplitude that occur due to the movement and the corresponding changes in delay.
                 float n_float_right = time_right * src.getSampleRate();
-                int M_right = static_cast<int>(floor(n_float_right));
-                float frac_right = n_float_right - M_right;
+                int M_right = static_cast<int>(round(n_float_right));
 
                 if (M_right >= 0 && (M_right + 1) < buffer.size()) {
-                // This is y[n] = x[n-(M+1)]*frac + x[n-M]*(1-frac)
-                // Here, index is (M) and (M+1) because we already subtracted delay to get birth_time
-                y_n_right = buffer[M_right+1] * frac_right + buffer[M_right] * (1.0 - frac_right);
+                y_n_right = buffer[M_right];
                 time_right_storage.push_back(global_time);
                 amplitude_right_storage.push_back(y_n_right);
                 }
