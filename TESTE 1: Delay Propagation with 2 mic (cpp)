@@ -166,19 +166,17 @@ int main(){
     vector <Source> sources_vec;
     int bufferSize = 2048;
     //start with 1 source
-    for (int i = 0; i < 1; ++i) {
         sources_vec.push_back(Source(0.5, 440.0, 44100, bufferSize, 0, 0, 0));
-    }
+    
 
 
-    vector<Microphone> mic_vec; //start with 1 microphone
-    for (int i = 0; i < 2; ++i) {
+    vector<Microphone> mic_vec; //start with 2 microphone
         mic_vec.push_back(Microphone(bufferSize, -1.0f, 0.0f, 0.0f)); 
         mic_vec.push_back(Microphone(bufferSize, 2.0f, 0.0f, 0.0f)); 
-    }
+    
 
     for (int i = 0; i < bufferSize; ++i) {
-        for (int j = 0; j < 2; ++j) {
+        for (int j = 0; j < mic_vec.size(); ++j) {
             mic_vec[j].update_recv_sound(sources_vec, i);
         }        
 
@@ -222,3 +220,4 @@ int main(){
     cout << "Execution time: " << duration.count() << " milliseconds" << endl;
     return 0;
     }
+
