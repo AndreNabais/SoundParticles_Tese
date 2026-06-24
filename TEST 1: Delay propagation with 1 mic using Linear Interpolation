@@ -37,6 +37,7 @@ class Source {
     double frequency;
     int SampleRate;
     int bufferSize;
+    vector<Position> positions;
     vector<float> signal;
 
     public:
@@ -71,6 +72,7 @@ class Source {
 
 class Microphone {
     private:
+        vector<Position> positions;
         vector<float> captured_signal;
         int bufferSize;
 
