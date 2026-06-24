@@ -29,34 +29,9 @@ struct Position {
     float y;
     float z;
 };
-class physicalObject {
-    protected:
-    vector<Position> positions;
-    float velocity;
-    float acceleration;
-
-    public:
-    Position getPositionSample(int n) const {
-        return positions[n];
-    }
-
-    Position updatePosition(int n, float delta_t) {
-        float new_position = positions[n-1].x + velocity * delta_t;
-        positions[n].x = new_position;
-        return 0;
-    }
-
-      Position updateVelocity(int n, float delta_t) {
-        float new_velocity = velocity + acceleration * delta_t;
-        velocity = new_velocity;
-        return 0;
-    }  
 
 
-
-};
-
-class Source : public physicalObject {
+class Source {
     private:
     double Amplitude;
     double frequency;
@@ -94,53 +69,7 @@ class Source : public physicalObject {
     
 };
 
-/*
-
-class Environment {
-    private:
-    double x_source;
-    double x_left;
-    double x_right;
-    double y_source;
-    double y_left;
-    double y_right;
-    double z_source;
-    double z_left;
-    double z_right;
-    double v;
-
-    public:
-    //constructor
-    Environment(double xs, double xl, double xr, double ys, double yl, double yr, double zs, double zl, double zr, double speed)
-    : x_source(xs), x_left(xl), x_right(xr), y_source(ys), y_left(yl),
-    y_right(yr), z_source(zs), z_left(zl), z_right(zr), v(speed) {}
-
-    pair<double,double> DelayTime() const{
-        double delayLeft = sqrt((x_left - x_source)*(x_left - x_source) + (y_left - y_source)*(y_left - y_source) +
-        (z_left - z_source)*(z_left - z_source))/v;
-        double delayRight = sqrt((x_right - x_source)*(x_right - x_source) + (y_right - y_source)*(y_right - y_source) +
-        (z_right - z_source)*(z_right - z_source))/v;  
-        return make_pair(delayLeft, delayRight);
-    }
-
-    pair<int,int> DelaySample(const Source& src) const{
-        auto [delayLeft, delayRight] = DelayTime();
-        int delaySampleLeft = delayLeft*src.getSampleRate();
-        int delaySampleRight = delayRight*src.getSampleRate();      
-        return make_pair(delaySampleLeft, delaySampleRight);
-    }
-
-    double get_x_left() const{
-        return x_left;
-    }
-
-    double get_x_right() const{
-        return x_right;
-    }
-};
-*/
-
-class Microphone : public physicalObject {
+class Microphone {
     private:
         vector<float> captured_signal;
         int bufferSize;
