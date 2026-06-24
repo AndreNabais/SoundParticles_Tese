@@ -1,4 +1,4 @@
-
+// FOR TEST 3, RUN THE SAME CODE AND CHANGE THE X COORDINATE FOR THE SOURCES
 
 
 #include <iostream>
@@ -167,10 +167,10 @@ int main(){
     vector <Source> sources_vec;
     int bufferSize = 2048;
     //start with 2 sources
-        sources_vec.push_back(Source(0.5, 440.0, 44100, bufferSize, 0, 0, 0));
-        sources_vec.push_back(Source(0.5, 440.0, 44100, bufferSize, 0, 0, 0));
+        sources_vec.push_back(Source(0.5, 440.0, 44100, bufferSize, 0, 0, 0)); //for TEST 3, change x coordinate to wavelength_distance and change amplitude of the signal from 0.5 to 1.0
+        sources_vec.push_back(Source(0.5, 440.0, 44100, bufferSize, 0, 0, 0)); //for TEST 3, change x coordinate to 4*wavelength_distance
         //use 0.5 amplitude for both sources to obtain constructive interference and -0.5 amplitude for the second source to obtain destructive interference
-
+        
 
     vector<Microphone> mic_vec; //start with 2 microphones
         mic_vec.push_back(Microphone(bufferSize, 0, 0.0f, 0.0f)); //initialize the microphone at position (0,0,0)
