@@ -1,0 +1,291 @@
+
+
+
+#include <iostream>
+#include <string>
+#include <cmath>
+#define _USE_MATH_DEFINES
+#include <math.h>
+#include <vector>
+#include <algorithm>
+#include <list>
+#include <fstream>
+#include <chrono> 
+#include <filesystem>
+
+using namespace std;
+
+
+
+void save_to_csv(const vector<float>& time, const vector<float>& data, const string& filename) {
+    ofstream file(filename);
+    for (size_t i = 0; i < time.size(); ++i)
+        file << time[i] << "," << data[i] << "\n";
+}
+
+
+struct Position {
+    float x;
+    float y;
+    float z;
+};
+
+class physicalObject {
+    protected:
+    vector<Position> positions;
+    float velocity;
+    float acceleration;
+
+    public:
+    Position getPositionSample(int n) const {
+        return positions[n];
+    }
+
+    void updatePosition(int n, float delta_t) {
+        if (n == 0) return; // Avoid accessing positions[-1] for the first sample
+
+        else {
+            float new_position = positions[n-1].x + velocity * delta_t;
+            positions[n].x = new_position;
+        }
+
+    }
+
+    void updateVelocity(int n, float delta_t) {
+        float new_velocity = velocity + acceleration * delta_t;
+        velocity = new_velocity;
+    } 
+
+    void setVelocity(float v) {
+        velocity = v;
+    }
+
+    float getVelocity() const {
+        return velocity;
+    }
+
+};
+
+class Source : public physicalObject {
+    private:
+    double Amplitude;
+    double frequency;
+    int SampleRate;
+    int bufferSize;
+    vector<float> signal;
+
+    public:
+    //constructor
+    Source(double amp, double freq, int sr, int bs, float initX, float initY, float initZ)
+    : Amplitude(amp), frequency(freq), SampleRate(sr), bufferSize(bs) {
+        signal.resize(bufferSize);
+        positions.resize(bufferSize);
+        for (int n=0; n<bufferSize; n++){
+            signal[n] = Amplitude * sin(2.0 * M_PI * frequency * n / SampleRate);
+            Position pos;
+            pos = {initX, initY, initZ}; //for now, the source is static at the specified position
+            positions[n] = pos;
+        }
+    }
+
+    //getter for the signal buffer
+
+    float getSignalSample(int n) const {
+        return signal[n];
+    }
+
+    Position getPositionSample(int n) const {
+        return positions[n];
+    }
+
+    double getSampleRate() const{
+        return SampleRate;
+    }
+
+    double getBufferSize() const{
+        return bufferSize;
+    }
+    
+};
+
+
+
+class Microphone : public physicalObject{
+    private:
+        vector<float> captured_signal;
+        int bufferSize;
+
+    public:
+    Microphone(int bs, float initX, float initY, float initZ) : bufferSize(bs) {
+        captured_signal.resize(bufferSize);
+        positions.resize(bufferSize);
+        for (int n=0; n<bufferSize; n++){
+            Position pos;
+            pos = {initX, initY, initZ}; //for now, the microphone is static at the specified position
+            positions[n] = pos;
+        }
+
+    }
+
+    void mic_capture(const Source& src) {
+        for (int n = 0; n < bufferSize; n++) {
+            captured_signal[n] = src.getSignalSample(n);
+        }
+    }
+
+    //getter for the captured signal buffer
+    float getCapturedSample(int n) const {
+        return captured_signal[n];
+
+    }
+
+    Position getPositionSample(int n) const {
+        return positions[n];
+    }
+
+
+void update_recv_sound(const vector<Source>& sources_vec, int current_sample) {
+
+        captured_signal[current_sample] = 0.0f; // Inicializa o sample atual
+        float c = 343.0f;          // Velocidade do som em m/s
+
+        // Posição atual deste microfone no instante n
+        Position mic_pos = getPositionSample(current_sample);
+
+        for (const auto& source : sources_vec) {
+            //Encontrar a posição desta fonte específica no instante n
+
+
+            for (int i = current_sample; i >= 0; i--){
+                Position src_pos = source.getPositionSample(i);
+                float dx = mic_pos.x - source.getPositionSample(i).x;
+                float dy = mic_pos.y - source.getPositionSample(i).y;
+                float dz = mic_pos.z - source.getPositionSample(i).z;
+                float distance = sqrt(dx*dx + dy*dy + dz*dz);
+                
+                float time_in_current_sample = static_cast<float>(current_sample) / static_cast<float>(source.getSampleRate());
+                float time_in_i_sample = static_cast<float>(i) / static_cast<float>(source.getSampleRate());
+                float delay_samples = static_cast<float>((distance / c) * source.getSampleRate());
+                float time_diff = time_in_current_sample - time_in_i_sample;
+
+                float result = time_diff * c - distance;
+                if (result >= 0) {
+
+                    //fractional delay interpolation for mic
+                    float n_float = static_cast<float>(current_sample) - delay_samples;
+                    int M = static_cast<int>(floor(n_float));
+                    float frac = n_float - M;
+
+                    if (M >= 0 && (M + 1) < source.getBufferSize()) {
+                        // This is y[n] = x[n-(M+1)]*frac + x[n-M]*(1-frac)
+                        // Here, index is (M) and (M+1) because we already subtracted delay to get birth_time
+                        float y_n = source.getSignalSample(M+1) * frac + source.getSignalSample(M) * (1.0 - frac);
+
+                        // O som da fonte no instante i já teve tempo de chegar ao microfone no instante current_sample
+                        // Portanto, podemos usar o sample i da fonte para contribuir para o sample current_sample do microfone
+                        captured_signal[current_sample] += y_n;
+                    }
+
+                    else if (M == 0) {
+                    // Boundary safety fallback
+                    captured_signal[current_sample] += source.getSignalSample(0);
+                }
+
+
+                    if (current_sample % 500 == 0) {
+                    
+                    cout << "Mic Sample: " << current_sample 
+                        << " | Source Sample: " << i 
+                        << " | Delay: " << delay_samples << " samples" << endl;
+                }
+
+                    break; // Saímos do loop, pois os samples anteriores a i não terão tempo de chegar ao microfone no instante current_sample
+                }
+        
+
+            }
+        }
+    }
+};
+
+
+
+int main(){
+
+    // Record start time
+    auto start = std::chrono::high_resolution_clock::now();
+
+    vector <Source> sources_vec;
+    int bufferSize = 2048;
+    float source_frequency = 440.0f; // Frequency of the sound wave in Hz
+    float velocity_sound = 343.0f; // Speed of sound in m/s
+    //start with 1 source
+        sources_vec.push_back(Source(0.5, source_frequency, 44100, bufferSize, 0, 0, 0));
+
+    
+    float wavelength_distance = velocity_sound / source_frequency; //wavelength distance in meters for a 440Hz sound wave
+
+    vector<Microphone> mic_vec; //start with 1 microphone
+        mic_vec.push_back(Microphone(bufferSize, 5.0f, 0.0f, 0.0f)); //initialize each microphone at position (1,0,0)
+
+    for (int i = 0; i < sources_vec.size(); ++i) {
+        sources_vec[i].setVelocity(50.0f); // Set a constant velocity of 50 m/s for each source
+    }
+    
+    for (int j = 0; j < mic_vec.size(); ++j) {
+        mic_vec[j].setVelocity(0.0f); // Set a constant velocity of 60 m/s for each microphone
+
+        //Doppler equation for observer approaching: f' = f*(v + vr)/(v - vs)
+        //Doppler equation for observer moving further away: f' = f*(v - vr)/(v + vs)
+
+        if (mic_vec[j].getVelocity() > sources_vec[0].getVelocity()) {
+            // Observer is moving faster than the source, moving away
+            float observed_frequency = source_frequency * (velocity_sound - mic_vec[j].getVelocity()) / (velocity_sound + sources_vec[0].getVelocity());
+            cout << "Observed frequency at microphone " << j+1 << ": " << observed_frequency << " Hz" << endl;
+        } else {
+            // Observer is moving slower than the source, moving towards
+            float observed_frequency = source_frequency * (velocity_sound + mic_vec[j].getVelocity()) / (velocity_sound - sources_vec[0].getVelocity());
+            cout << "Observed frequency at microphone " << j+1 << ": " << observed_frequency << " Hz" << endl;
+        }
+    }
+
+    for (int i = 0; i < bufferSize; ++i) {   
+
+        for (int j = 0; j < sources_vec.size(); ++j) {
+            sources_vec[j].updatePosition(i, 1.0f / sources_vec[0].getSampleRate()); // Update the position of each source based on its velocity
+            mic_vec[j].update_recv_sound(sources_vec, i);
+
+        }
+    }
+
+    
+
+    //save csv files
+
+    ofstream src_file("./source.csv");
+        for (size_t i = 0; i < bufferSize; ++i) {
+            float time_source = static_cast<float>(i)/static_cast<float>(sources_vec[0].getSampleRate());
+            src_file << time_source << "," << sources_vec[0].getSignalSample(i) << "\n";
+            };
+    src_file.close();
+
+
+    ofstream mic_file("./microphone.csv");
+        for (size_t i = 0; i < bufferSize; ++i) {
+            float time_mic = static_cast<float>(i)/static_cast<float>(sources_vec[0].getSampleRate());
+            mic_file << time_mic << "," << mic_vec[0].getCapturedSample(i) << "\n";
+            };
+    mic_file.close();
+
+    cout << "Saved all CSVs in: " << filesystem::current_path() << endl;
+    
+    // Record end time
+    auto finish = std::chrono::high_resolution_clock::now();
+
+    // Calculate duration
+    // Use microseconds (us) if the code runs very fast, or milliseconds (ms) for longer simulations
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(finish - start);
+
+    cout << "Execution time: " << duration.count() << " milliseconds" << endl;
+    return 0;
+    }
