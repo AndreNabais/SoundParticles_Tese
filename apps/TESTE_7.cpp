@@ -43,8 +43,8 @@ int main(){
         Mach_angle[i].resize(sources_vec.size());
 
     for (size_t j = 0; j < sources_vec.size(); ++j) {
-        sources_vec[j].setVelocity(Velocity(3.0 * velocity_sound, 0.0f, 0.0f)); // Set a constant velocity of 50 m/s for each source
-        sources_vec[j].setAcceleration(Acceleration(0.0f, 0.0f, 0.0f)); // Set a constant acceleration of 100 m/s² for each source
+        sources_vec[j].setVelocity(Velocity(3.0 * velocity_sound, 0.0f, 0.0f)); 
+        sources_vec[j].setAcceleration(Acceleration(0.0f, 0.0f, 0.0f)); 
 
         //Mach angle calculation
         Mach_number_x[i][j] = sources_vec[j].getVelocitySample(i).x / velocity_sound;
@@ -58,8 +58,8 @@ int main(){
     }
     
     for (size_t j = 0; j < mic_vec.size(); ++j) {
-        mic_vec[j].setVelocity(Velocity(0.0f, 0.0f, 0.0f)); // Set a constant velocity of 0 m/s for each microphone
-        mic_vec[j].setAcceleration(Acceleration(0.0f, 0.0f, 0.0f)); // Set a constant acceleration of 0 m/s² for each microphone
+        mic_vec[j].setVelocity(Velocity(0.0f, 0.0f, 0.0f)); 
+        mic_vec[j].setAcceleration(Acceleration(0.0f, 0.0f, 0.0f)); 
 
         //Doppler equation for observer approaching: f' = f*(v + vr)/(v - vs)
         //Doppler equation for observer moving further away: f' = f*(v - vr)/(v + vs)

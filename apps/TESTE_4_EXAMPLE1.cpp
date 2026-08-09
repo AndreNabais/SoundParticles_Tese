@@ -32,14 +32,14 @@ int main(){
     float wavelength_distance = velocity_sound / source_frequency; //wavelength distance in meters for a 440Hz sound wave
 
     vector<Microphone> mic_vec; //start with 1 microphone
-        mic_vec.push_back(Microphone(bufferSize, 0.0f, 0.0f, 0.0f)); //initialize each microphone at position (1,0,0)
+        mic_vec.push_back(Microphone(bufferSize, 0.0f, 0.0f, 0.0f));
 
     for (size_t i = 0; i < sources_vec.size(); ++i) {
-        sources_vec[i].setVelocity(Velocity(0.0f, 0.0f, 0.0f)); // Set a constant velocity of 50 m/s for each source
+        sources_vec[i].setVelocity(Velocity(0.0f, 0.0f, 0.0f)); 
     }
     
     for (size_t j = 0; j < mic_vec.size(); ++j) {
-        mic_vec[j].setVelocity(Velocity(50.0f, 0.0f, 0.0f)); // Set a constant velocity of 50 m/s for each microphone
+        mic_vec[j].setVelocity(Velocity(50.0f, 0.0f, 0.0f)); 
 
     }
 

@@ -32,14 +32,14 @@ int main(){
     vector<vector<float>> Mach_number_x(bufferSize); // per-source, per-sample
     vector<vector<float>> Mach_angle(bufferSize);
     vector<Microphone> mic_vec; //start with 1 microphone
-    mic_vec.push_back(Microphone(bufferSize, 4*wavelength_distance, 0.0f, 0.0f)); //initialize each microphone at position (1,0,0)
+    mic_vec.push_back(Microphone(bufferSize, 4*wavelength_distance, 0.0f, 0.0f)); 
 
     for (size_t i = 0; i < bufferSize; ++i) {
         Mach_number_x[i].resize(sources_vec.size());
         Mach_angle[i].resize(sources_vec.size());
 
     for (size_t j = 0; j < sources_vec.size(); ++j) {
-        sources_vec[j].setVelocity(Velocity(0.5 * velocity_sound, 0.0f, 0.0f)); // Set a constant velocity of 50 m/s for each source
+        sources_vec[j].setVelocity(Velocity(0.5 * velocity_sound, 0.0f, 0.0f)); 
 
         //Mach angle calculation
         Mach_number_x[i][j] = sources_vec[j].getVelocitySample(i).x / velocity_sound;
@@ -53,7 +53,7 @@ int main(){
     }
     
     for (size_t j = 0; j < mic_vec.size(); ++j) {
-        mic_vec[j].setVelocity(Velocity(0.0f, 0.0f, 0.0f)); // Set a constant velocity of 0 m/s for each microphone microphone
+        mic_vec[j].setVelocity(Velocity(0.0f, 0.0f, 0.0f)); 
     
     }
 
