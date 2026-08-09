@@ -1,0 +1,211 @@
+#compiler settings
+CXX = g++
+CXXFLAGS = -std=c++17 -Wall -Wextra -I$(INCLUDE_DIR)
+
+#path variables
+APPS_DIR = ./apps
+BIN_DIR = ./bin
+BUILD_DIR = ./build
+DATA_DIR = ./data
+INCLUDE_DIR = ./include
+SCRIPTS_DIR =./scripts
+SRC_DIR = ./src
+
+MAIN_1_1_SRC = $(APPS_DIR)/TESTE_1_1mic.cpp
+MAIN_1_2_SRC = $(APPS_DIR)/TESTE_1_2mics.cpp
+MAIN_2_SRC = $(APPS_DIR)/TESTE_2.cpp
+MAIN_3_SRC = $(APPS_DIR)/TESTE_3.cpp
+MAIN_4_1_SRC = $(APPS_DIR)/TESTE_4_EXAMPLE1.cpp
+MAIN_4_2_SRC = $(APPS_DIR)/TESTE_4_EXAMPLE2.cpp
+MAIN_4_3_SRC = $(APPS_DIR)/TESTE_4_EXAMPLE3.cpp
+MAIN_5_1_SRC = $(APPS_DIR)/TESTE_5_EXAMPLE1.cpp
+MAIN_5_2_SRC = $(APPS_DIR)/TESTE_5_EXAMPLE2.cpp
+MAIN_6_SRC = $(APPS_DIR)/TESTE_6.cpp
+MAIN_7_SRC = $(APPS_DIR)/TESTE_7.cpp
+
+
+ACCELERATION_SRC = $(SRC_DIR)/Acceleration.cpp
+ACCELERATION_HEADER = $(INCLUDE_DIR)/Acceleration.h
+
+DISTANCE_SRC = $(SRC_DIR)/Distance.cpp
+DISTANCE_HEADER = $(INCLUDE_DIR)/Distance.h
+
+IO_UTILS_SRC = $(SRC_DIR)/io_utils.cpp
+IO_UTILS_HEADER = $(INCLUDE_DIR)/io_utils.h
+
+MICROPHONE_SRC = $(SRC_DIR)/Microphone.cpp
+MICROPHONE_HEADER = $(INCLUDE_DIR)/Microphone.h
+
+PHYSICAl_OBJECT_SRC = $(SRC_DIR)/PhysicalObject.cpp
+PHYSICAL_OBJECT_HEADER = $(INCLUDE_DIR)/PhysicalObject.h
+
+SOURCE_SRC = $(SRC_DIR)/Source.cpp
+SOURCE_HEADER = $(INCLUDE_DIR)/Source.h
+
+VELOCITY_SRC = $(SRC_DIR)/Velocity.cpp
+VELOCITY_HEADER = $(INCLUDE_DIR)/Velocity.h
+
+POSITION_HEADER = $(INCLUDE_DIR)/Position.h
+
+#object files
+MAIN_1_1_OBJ = $(BUILD_DIR)/TESTE_1_1mic.o
+MAIN_1_2_OBJ = $(BUILD_DIR)/TESTE_1_2mics.o
+MAIN_2_OBJ = $(BUILD_DIR)/TESTE_2.o
+MAIN_3_OBJ = $(BUILD_DIR)/TESTE_3.o
+MAIN_4_1_OBJ = $(BUILD_DIR)/TESTE_4_EXAMPLE1.o
+MAIN_4_2_OBJ = $(BUILD_DIR)/TESTE_4_EXAMPLE2.o
+MAIN_4_3_OBJ = $(BUILD_DIR)/TESTE_4_EXAMPLE3.o
+MAIN_5_1_OBJ = $(BUILD_DIR)/TESTE_5_EXAMPLE1.o
+MAIN_5_2_OBJ = $(BUILD_DIR)/TESTE_5_EXAMPLE2.o
+MAIN_6_OBJ = $(BUILD_DIR)/TESTE_6.o
+MAIN_7_OBJ = $(BUILD_DIR)/TESTE_7.o
+MAIN_OBJ         = $(BUILD_DIR)/main.o
+ACCELERATION_OBJ = $(BUILD_DIR)/Acceleration.o
+DISTANCE_OBJ     = $(BUILD_DIR)/Distance.o
+IO_UTILS_OBJ     = $(BUILD_DIR)/io_utils.o
+MICROPHONE_OBJ  = $(BUILD_DIR)/Microphone.o
+PHYSICAL_OBJECT_OBJ = $(BUILD_DIR)/PhysicalObject.o
+SOURCE_OBJ       = $(BUILD_DIR)/Source.o
+VELOCITY_OBJ     = $(BUILD_DIR)/Velocity.o
+
+MAIN_OBJS = $(MAIN_1_1_OBJ) $(MAIN_1_2_OBJ) $(MAIN_2_OBJ) $(MAIN_3_OBJ) $(MAIN_4_1_OBJ) \
+	   $(MAIN_4_2_OBJ) $(MAIN_4_3_OBJ) $(MAIN_5_1_OBJ) $(MAIN_5_2_OBJ) \
+	   $(MAIN_6_OBJ) $(MAIN_7_OBJ)
+
+COMMON_OBJS = $(ACCELERATION_OBJ) $(DISTANCE_OBJ) $(IO_UTILS_OBJ) $(MICROPHONE_OBJ) \
+              $(PHYSICAL_OBJECT_OBJ) $(SOURCE_OBJ) $(VELOCITY_OBJ)
+
+
+#final executables
+BIN_1_1 = $(BIN_DIR)/TESTE_1_1mic
+BIN_1_2 = $(BIN_DIR)/TESTE_1_2mics
+BIN_2   = $(BIN_DIR)/TESTE_2
+BIN_3   = $(BIN_DIR)/TESTE_3
+BIN_4_1 = $(BIN_DIR)/TESTE_4_EXAMPLE1
+BIN_4_2 = $(BIN_DIR)/TESTE_4_EXAMPLE2
+BIN_4_3 = $(BIN_DIR)/TESTE_4_EXAMPLE3
+BIN_5_1 = $(BIN_DIR)/TESTE_5_EXAMPLE1
+BIN_5_2 = $(BIN_DIR)/TESTE_5_EXAMPLE2
+BIN_6   = $(BIN_DIR)/TESTE_6
+BIN_7   = $(BIN_DIR)/TESTE_7
+
+
+ALL_BINS = $(BIN_1_1) $(BIN_1_2) $(BIN_2) $(BIN_3) $(BIN_4_1) $(BIN_4_2) $(BIN_4_3) \
+           $(BIN_5_1) $(BIN_5_2) $(BIN_6) $(BIN_7)
+
+
+
+#Targets and dependencies
+all: $(ALL_BINS)
+
+#link step
+$(BIN_1_1): $(MAIN_1_1_OBJ) $(COMMON_OBJS) | $(BIN_DIR)
+	$(CXX) $(MAIN_1_1_OBJ) $(COMMON_OBJS) -o $(BIN_1_1)
+
+$(BIN_1_2): $(MAIN_1_2_OBJ) $(COMMON_OBJS) | $(BIN_DIR)
+	$(CXX) $(MAIN_1_2_OBJ) $(COMMON_OBJS) -o $(BIN_1_2)
+
+$(BIN_2): $(MAIN_2_OBJ) $(COMMON_OBJS) | $(BIN_DIR)
+	$(CXX) $(MAIN_2_OBJ) $(COMMON_OBJS) -o $(BIN_2)
+
+$(BIN_3): $(MAIN_3_OBJ) $(COMMON_OBJS) | $(BIN_DIR)
+	$(CXX) $(MAIN_3_OBJ) $(COMMON_OBJS) -o $(BIN_3)
+
+$(BIN_4_1): $(MAIN_4_1_OBJ) $(COMMON_OBJS) | $(BIN_DIR)
+	$(CXX) $(MAIN_4_1_OBJ) $(COMMON_OBJS) -o $(BIN_4_1)
+
+$(BIN_4_2): $(MAIN_4_2_OBJ) $(COMMON_OBJS) | $(BIN_DIR)
+	$(CXX) $(MAIN_4_2_OBJ) $(COMMON_OBJS) -o $(BIN_4_2)
+
+$(BIN_4_3): $(MAIN_4_3_OBJ) $(COMMON_OBJS) | $(BIN_DIR)
+	$(CXX) $(MAIN_4_3_OBJ) $(COMMON_OBJS) -o $(BIN_4_3)
+
+$(BIN_5_1): $(MAIN_5_1_OBJ) $(COMMON_OBJS) | $(BIN_DIR)
+	$(CXX) $(MAIN_5_1_OBJ) $(COMMON_OBJS) -o $(BIN_5_1)
+
+$(BIN_5_2): $(MAIN_5_2_OBJ) $(COMMON_OBJS) | $(BIN_DIR)
+	$(CXX) $(MAIN_5_2_OBJ) $(COMMON_OBJS) -o $(BIN_5_2)
+
+$(BIN_6): $(MAIN_6_OBJ) $(COMMON_OBJS) | $(BIN_DIR)
+	$(CXX) $(MAIN_6_OBJ) $(COMMON_OBJS) -o $(BIN_6)
+
+$(BIN_7): $(MAIN_7_OBJ) $(COMMON_OBJS) | $(BIN_DIR)
+	$(CXX) $(MAIN_7_OBJ) $(COMMON_OBJS) -o $(BIN_7)
+
+#compile steps
+
+$(VELOCITY_OBJ): $(VELOCITY_SRC) $(VELOCITY_HEADER) | $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) -c $(VELOCITY_SRC) -o $(VELOCITY_OBJ)
+
+$(SOURCE_OBJ): $(SOURCE_SRC) $(SOURCE_HEADER) | $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) -c $(SOURCE_SRC) -o $(SOURCE_OBJ)
+
+$(PHYSICAL_OBJECT_OBJ): $(PHYSICAl_OBJECT_SRC) $(PHYSICAL_OBJECT_HEADER) | $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) -c $(PHYSICAl_OBJECT_SRC) -o $(PHYSICAL_OBJECT_OBJ)
+
+$(MICROPHONE_OBJ): $(MICROPHONE_SRC) $(MICROPHONE_HEADER) | $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) -c $(MICROPHONE_SRC) -o $(MICROPHONE_OBJ)
+
+$(IO_UTILS_OBJ): $(IO_UTILS_SRC) $(IO_UTILS_HEADER) | $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) -c $(IO_UTILS_SRC) -o $(IO_UTILS_OBJ)
+
+$(DISTANCE_OBJ): $(DISTANCE_SRC) $(DISTANCE_HEADER) | $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) -c $(DISTANCE_SRC) -o $(DISTANCE_OBJ)
+
+$(ACCELERATION_OBJ): $(ACCELERATION_SRC) $(ACCELERATION_HEADER) | $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) -c $(ACCELERATION_SRC) -o $(ACCELERATION_OBJ)
+
+$(MAIN_1_1_OBJ): $(MAIN_1_1_SRC) | $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) -c $(MAIN_1_1_SRC) -o $(MAIN_1_1_OBJ)
+
+$(MAIN_1_2_OBJ): $(MAIN_1_2_SRC) | $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) -c $(MAIN_1_2_SRC) -o $(MAIN_1_2_OBJ)
+
+$(MAIN_2_OBJ): $(MAIN_2_SRC) | $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) -c $(MAIN_2_SRC) -o $(MAIN_2_OBJ)
+
+$(MAIN_3_OBJ): $(MAIN_3_SRC) | $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) -c $(MAIN_3_SRC) -o $(MAIN_3_OBJ)
+
+$(MAIN_4_1_OBJ): $(MAIN_4_1_SRC) | $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) -c $(MAIN_4_1_SRC) -o $(MAIN_4_1_OBJ)
+
+$(MAIN_4_2_OBJ): $(MAIN_4_2_SRC) | $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) -c $(MAIN_4_2_SRC) -o $(MAIN_4_2_OBJ)
+
+$(MAIN_4_3_OBJ): $(MAIN_4_3_SRC) | $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) -c $(MAIN_4_3_SRC) -o $(MAIN_4_3_OBJ)
+
+$(MAIN_5_1_OBJ): $(MAIN_5_1_SRC) | $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) -c $(MAIN_5_1_SRC) -o $(MAIN_5_1_OBJ)
+
+$(MAIN_5_2_OBJ): $(MAIN_5_2_SRC) | $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) -c $(MAIN_5_2_SRC) -o $(MAIN_5_2_OBJ)
+
+$(MAIN_6_OBJ): $(MAIN_6_SRC) | $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) -c $(MAIN_6_SRC) -o $(MAIN_6_OBJ)
+
+$(MAIN_7_OBJ): $(MAIN_7_SRC) | $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) -c $(MAIN_7_SRC) -o $(MAIN_7_OBJ)
+
+
+
+
+clean:
+	rm -f $(BUILD_DIR)/*.o $(TARGET)
+
+tests: $(ALL_BINS)
+
+execute_tests: 
+	./$(BIN_1_1) && python3 $(SCRIPTS_DIR)/Plots_1source_1mic.py
+	./$(BIN_1_2) && python3 $(SCRIPTS_DIR)/Plots_1source_2mics.py
+	./$(BIN_2)   && python3 $(SCRIPTS_DIR)/Plots_2sources_1mic.py
+	./$(BIN_3)   && python3 $(SCRIPTS_DIR)/Plots_2sources_1mic.py
+	./$(BIN_4_1) && python3 $(SCRIPTS_DIR)/Plots_1source_1mic.py
+	./$(BIN_4_2) && python3 $(SCRIPTS_DIR)/Plots_1source_1mic.py
+	./$(BIN_4_3) && python3 $(SCRIPTS_DIR)/Plots_1source_1mic.py
+	./$(BIN_5_1) && python3 $(SCRIPTS_DIR)/Plots_1source_1mic.py
+	./$(BIN_5_2) && python3 $(SCRIPTS_DIR)/Plots_1source_1mic.py
+	./$(BIN_6)   && python3 $(SCRIPTS_DIR)/Plots_1source_1mic.py
+	./$(BIN_7)   && python3 $(SCRIPTS_DIR)/Plots_1source_1mic.py
+    
