@@ -1,46 +1,28 @@
 #include "PhysicalObject.h"
-#include "Velocity.h"
-#include "Acceleration.h"
+#include <utility>
 
-    Position PhysicalObject::getPositionSample(int n) const {
-        return positions[n];
+//constructor, gives ownership of the Position_generator object to the PhysicalObject.
+
+    PhysicalObject::PhysicalObject(std::unique_ptr<Position_generator> start_pos) : pos_gen(std::move(start_pos)) {}
+
+    //setter that updates the velocity value
+    void PhysicalObject::setVelocity(Velocity new_velocity){
+        this->velocity = new_velocity;
     }
 
-    void PhysicalObject::updatePosition(int n, float delta_t) {
-        if (n == 0) return; // Avoid accessing positions[-1] for the first sample
-
-        else {
-            positions[n].x = positions[n-1].x + Velocity_history[n-1].x * delta_t; //for now, set the source to move only along the x-axis. In the future, we can extend this to 3D movement.
-            positions[n].y = positions[n-1].y + Velocity_history[n-1].y * delta_t; //for now, set the source to move only along the y-axis. In the future, we can extend this to 3D movement.
-            positions[n].z = positions[n-1].z + Velocity_history[n-1].z * delta_t; //for now, set the source to move only along the z-axis. In the future, we can extend this to 3D movement.
-        }
-
+    void PhysicalObject::setAcceleration(Acceleration new_acceleration){
+        this->acceleration = new_acceleration;
     }
 
-    void PhysicalObject::updateVelocity(int n, float delta_t) {
-        if (n == 0) return; // Avoid accessing positions[-1] for the first sample
-
-        else {
-            Velocity_history[n].x = Velocity_history[n-1].x + Acceleration_history[n-1].x * delta_t;
-            Velocity_history[n].y = Velocity_history[n-1].y + Acceleration_history[n-1].y * delta_t;
-            Velocity_history[n].z = Velocity_history[n-1].z + Acceleration_history[n-1].z * delta_t;
-        }
+    //getter for the position of the physical object at a given time. We define a unique pointer to the Position_generator object, which is a base class for different types of position generators. 
+    Position PhysicalObject::getPosition(float time) const {
+        return pos_gen->position_getter(time);
     }
 
-    void PhysicalObject::setVelocity(Velocity v) {
-        Velocity_history[0] = v;
+    Velocity PhysicalObject::getVelocity(float time) const {
+        return pos_gen->velocity_getter(time);
     }
 
-    Velocity PhysicalObject::getVelocitySample(int n) const {
-        return Velocity_history[n];
-    }
-
-    void PhysicalObject::setAcceleration(Acceleration a) {
-        for (auto& a_n : Acceleration_history) {
-            a_n = a;
-        }
-    }
-    
-    Acceleration PhysicalObject::getAccelerationSample(int n) const {
-        return Acceleration_history[n];
+    Acceleration PhysicalObject::getAcceleration(float time) const {
+        return pos_gen->acceleration_getter(time);
     }
