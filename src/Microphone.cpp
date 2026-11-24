@@ -1,3 +1,59 @@
+#include "Microphone.h"
+#include "Distance.h"
+#include "Velocity.h"
+#include "Acceleration.h"
+#include "Position_generator.h"
+
+using namespace std;
+
+//constructor
+Microphone::Microphone(std::unique_ptr<Position_generator> start_pos, int bs, int sample_rate) : PhysicalObject(std::move(start_pos)), bufferSize(bs), Sample_Rate(sample_rate) {
+    captured_signal.resize(bufferSize);
+
+}
+
+void Microphone::mic_capture(const Source& src) {
+    for (int n = 0; n < bufferSize; n++) {
+        captured_signal[n] = src.getSignalSample(n);
+    }
+}
+
+//getter for the captured signal buffer
+float Microphone::getCapturedSample(int n) const {
+    return captured_signal[n];
+}
+
+
+void Microphone::setPolarPattern(PolarPattern p, Position facing) {
+    polar_pattern = p;
+
+    // normalize the facing direction so that cos(theta) comes out right
+    float len = sqrt(facing.x * facing.x + facing.y * facing.y + facing.z * facing.z);
+    if (len > 0.0f) {
+        mic_facing.x = facing.x / len;
+        mic_facing.y = facing.y / len;
+        mic_facing.z = facing.z / len;
+    }
+}
+
+float Microphone::directional_gain(const Position& source_pos, const Position& mic_pos) const {
+    if (polar_pattern == PolarPattern::Omnidirectional) {
+        return 1.0f;
+    }
+
+    // direction from the mic to the source
+    float dx = source_pos.x - mic_pos.x;
+    float dy = source_pos.y - mic_pos.y;
+    float dz = source_pos.z - mic_pos.z;
+    float d = sqrt(dx * dx + dy * dy + dz * dz);
+    if (d == 0.0f) return 1.0f;   // source exactly at the mic: no defined direction
+
+    float cos_theta = (dx * mic_facing.x + dy * mic_facing.y + dz * mic_facing.z) / d;
+
+    return 0.5f * (1.0f + cos_theta);   // cardioid: 1 at the front, 0.5 at the sides, 0 at the back
+}
+
+
 
 // WITH ATTENUATION AND MIC SENSITIVITY, NOT OTIMIZED
 void Microphone::update_recv_sound(const std::vector<Source>& sources_vec, int current_sample) {
