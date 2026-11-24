@@ -11,21 +11,8 @@ INCLUDE_DIR = ./include
 SCRIPTS_DIR =./scripts
 SRC_DIR = ./src
 
-MAIN_1_1_SRC = $(APPS_DIR)/TESTE_1_1mic.cpp
-MAIN_1_2_SRC = $(APPS_DIR)/TESTE_1_2mics.cpp
-MAIN_2_SRC = $(APPS_DIR)/TESTE_2.cpp
-MAIN_3_SRC = $(APPS_DIR)/TESTE_3.cpp
-MAIN_4_1_SRC = $(APPS_DIR)/TESTE_4_EXAMPLE1.cpp
-MAIN_4_2_SRC = $(APPS_DIR)/TESTE_4_EXAMPLE2.cpp
-MAIN_4_3_SRC = $(APPS_DIR)/TESTE_4_EXAMPLE3.cpp
-MAIN_5_1_SRC = $(APPS_DIR)/TESTE_5_EXAMPLE1.cpp
-MAIN_5_2_SRC = $(APPS_DIR)/TESTE_5_EXAMPLE2.cpp
-MAIN_6_SRC = $(APPS_DIR)/TESTE_6.cpp
-MAIN_7_SRC = $(APPS_DIR)/TESTE_7.cpp
 MAIN_HORIZONTAL_SRC = $(APPS_DIR)/Horizontal_movement.cpp
-MAIN_VERTICAL_SRC = $(APPS_DIR)/Vertical_movement.cpp
 MAIN_CIRCULAR_SRC = $(APPS_DIR)/Circular_movement.cpp
-MAIN_MULTIPLE_SRC = $(APPS_DIR)/Multiple_sources.cpp
 
 
 
@@ -56,21 +43,8 @@ POSITION_GENERATOR_SRC = $(SRC_DIR)/Position_generator.cpp
 POSITION_GENERATOR_HEADER = $(INCLUDE_DIR)/Position_generator.h
 
 #object files
-MAIN_1_1_OBJ = $(BUILD_DIR)/TESTE_1_1mic.o
-MAIN_1_2_OBJ = $(BUILD_DIR)/TESTE_1_2mics.o
-MAIN_2_OBJ = $(BUILD_DIR)/TESTE_2.o
-MAIN_3_OBJ = $(BUILD_DIR)/TESTE_3.o
-MAIN_4_1_OBJ = $(BUILD_DIR)/TESTE_4_EXAMPLE1.o
-MAIN_4_2_OBJ = $(BUILD_DIR)/TESTE_4_EXAMPLE2.o
-MAIN_4_3_OBJ = $(BUILD_DIR)/TESTE_4_EXAMPLE3.o
-MAIN_5_1_OBJ = $(BUILD_DIR)/TESTE_5_EXAMPLE1.o
-MAIN_5_2_OBJ = $(BUILD_DIR)/TESTE_5_EXAMPLE2.o
-MAIN_6_OBJ = $(BUILD_DIR)/TESTE_6.o
-MAIN_7_OBJ = $(BUILD_DIR)/TESTE_7.o
 MAIN_HORIZONTAL_OBJ = $(BUILD_DIR)/Horizontal_movement.o
-MAIN_VERTICAL_OBJ = $(BUILD_DIR)/Vertical_movement.o
 MAIN_CIRCULAR_OBJ = $(BUILD_DIR)/Circular_movement.o
-MAIN_MULTIPLE_OBJ = $(BUILD_DIR)/Multiple_sources.o
 ACCELERATION_OBJ = $(BUILD_DIR)/Acceleration.o
 DISTANCE_OBJ     = $(BUILD_DIR)/Distance.o
 IO_UTILS_OBJ     = $(BUILD_DIR)/io_utils.o
@@ -82,88 +56,38 @@ VELOCITY_OBJ     = $(BUILD_DIR)/Velocity.o
 #TESTE:
 POSITION_GENERATOR_OBJ = $(BUILD_DIR)/Position_generator.o
 
-MAIN_OBJS = $(MAIN_1_1_OBJ) $(MAIN_1_2_OBJ) $(MAIN_2_OBJ) $(MAIN_3_OBJ) $(MAIN_4_1_OBJ) \
-	   $(MAIN_4_2_OBJ) $(MAIN_4_3_OBJ) $(MAIN_5_1_OBJ) $(MAIN_5_2_OBJ) \
-	   $(MAIN_6_OBJ) $(MAIN_7_OBJ) $(MAIN_HORIZONTAL_OBJ) $(MAIN_VERTICAL_OBJ) $(MAIN_CIRCULAR_OBJ) \
-	   $(MAIN_MULTIPLE_OBJ)
+MAIN_OBJS = $(MAIN_HORIZONTAL_OBJ) $(MAIN_CIRCULAR_OBJ)
 
 COMMON_OBJS = $(ACCELERATION_OBJ) $(DISTANCE_OBJ) $(IO_UTILS_OBJ) $(MICROPHONE_OBJ) \
               $(PHYSICAL_OBJECT_OBJ) $(SOURCE_OBJ) $(VELOCITY_OBJ) $(POSITION_GENERATOR_OBJ)
 
 
 #final executables
-BIN_1_1 = $(BIN_DIR)/TESTE_1_1mic
-BIN_1_2 = $(BIN_DIR)/TESTE_1_2mics
-BIN_2   = $(BIN_DIR)/TESTE_2
-BIN_3   = $(BIN_DIR)/TESTE_3
-BIN_4_1 = $(BIN_DIR)/TESTE_4_EXAMPLE1
-BIN_4_2 = $(BIN_DIR)/TESTE_4_EXAMPLE2
-BIN_4_3 = $(BIN_DIR)/TESTE_4_EXAMPLE3
-BIN_5_1 = $(BIN_DIR)/TESTE_5_EXAMPLE1
-BIN_5_2 = $(BIN_DIR)/TESTE_5_EXAMPLE2
-BIN_6   = $(BIN_DIR)/TESTE_6
-BIN_7   = $(BIN_DIR)/TESTE_7
 BIN_HORIZONTAL = $(BIN_DIR)/Horizontal_movement
-BIN_VERTICAL = $(BIN_DIR)/Vertical_movement
 BIN_CIRCULAR = $(BIN_DIR)/Circular_movement
-BIN_MULTIPLE = $(BIN_DIR)/Multiple_sources
 
 
 
-ALL_BINS = $(BIN_1_1) $(BIN_1_2) $(BIN_2) $(BIN_3) $(BIN_4_1) $(BIN_4_2) $(BIN_4_3) \
-           $(BIN_5_1) $(BIN_5_2) $(BIN_6) $(BIN_7) $(BIN_HORIZONTAL) $(BIN_VERTICAL) \
-		    $(BIN_CIRCULAR) $(BIN_MULTIPLE)
+ALL_BINS = $(BIN_HORIZONTAL) $(BIN_CIRCULAR)
 
 
 
 #Targets and dependencies
 all: $(ALL_BINS)
 
+#create the output folders if they don't exist yet
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
+
+$(BIN_DIR):
+	mkdir -p $(BIN_DIR)
+
 #link step
-$(BIN_1_1): $(MAIN_1_1_OBJ) $(COMMON_OBJS) | $(BIN_DIR)
-	$(CXX) $(MAIN_1_1_OBJ) $(COMMON_OBJS) -o $(BIN_1_1)
-
-$(BIN_1_2): $(MAIN_1_2_OBJ) $(COMMON_OBJS) | $(BIN_DIR)
-	$(CXX) $(MAIN_1_2_OBJ) $(COMMON_OBJS) -o $(BIN_1_2)
-
-$(BIN_2): $(MAIN_2_OBJ) $(COMMON_OBJS) | $(BIN_DIR)
-	$(CXX) $(MAIN_2_OBJ) $(COMMON_OBJS) -o $(BIN_2)
-
-$(BIN_3): $(MAIN_3_OBJ) $(COMMON_OBJS) | $(BIN_DIR)
-	$(CXX) $(MAIN_3_OBJ) $(COMMON_OBJS) -o $(BIN_3)
-
-$(BIN_4_1): $(MAIN_4_1_OBJ) $(COMMON_OBJS) | $(BIN_DIR)
-	$(CXX) $(MAIN_4_1_OBJ) $(COMMON_OBJS) -o $(BIN_4_1)
-
-$(BIN_4_2): $(MAIN_4_2_OBJ) $(COMMON_OBJS) | $(BIN_DIR)
-	$(CXX) $(MAIN_4_2_OBJ) $(COMMON_OBJS) -o $(BIN_4_2)
-
-$(BIN_4_3): $(MAIN_4_3_OBJ) $(COMMON_OBJS) | $(BIN_DIR)
-	$(CXX) $(MAIN_4_3_OBJ) $(COMMON_OBJS) -o $(BIN_4_3)
-
-$(BIN_5_1): $(MAIN_5_1_OBJ) $(COMMON_OBJS) | $(BIN_DIR)
-	$(CXX) $(MAIN_5_1_OBJ) $(COMMON_OBJS) -o $(BIN_5_1)
-
-$(BIN_5_2): $(MAIN_5_2_OBJ) $(COMMON_OBJS) | $(BIN_DIR)
-	$(CXX) $(MAIN_5_2_OBJ) $(COMMON_OBJS) -o $(BIN_5_2)
-
-$(BIN_6): $(MAIN_6_OBJ) $(COMMON_OBJS) | $(BIN_DIR)
-	$(CXX) $(MAIN_6_OBJ) $(COMMON_OBJS) -o $(BIN_6)
-
-$(BIN_7): $(MAIN_7_OBJ) $(COMMON_OBJS) | $(BIN_DIR)
-	$(CXX) $(MAIN_7_OBJ) $(COMMON_OBJS) -o $(BIN_7)
-
 $(BIN_HORIZONTAL): $(MAIN_HORIZONTAL_OBJ) $(COMMON_OBJS) | $(BIN_DIR)
 	$(CXX) $(MAIN_HORIZONTAL_OBJ) $(COMMON_OBJS) -o $(BIN_HORIZONTAL)
 
-$(BIN_VERTICAL): $(MAIN_VERTICAL_OBJ) $(COMMON_OBJS) | $(BIN_DIR)
-	$(CXX) $(MAIN_VERTICAL_OBJ) $(COMMON_OBJS) -o $(BIN_VERTICAL)
-
 $(BIN_CIRCULAR): $(MAIN_CIRCULAR_OBJ) $(COMMON_OBJS) | $(BIN_DIR)
 	$(CXX) $(MAIN_CIRCULAR_OBJ) $(COMMON_OBJS) -o $(BIN_CIRCULAR)
-
-$(BIN_MULTIPLE): $(MAIN_MULTIPLE_OBJ) $(COMMON_OBJS) | $(BIN_DIR)
-	$(CXX) $(MAIN_MULTIPLE_OBJ) $(COMMON_OBJS) -o $(BIN_MULTIPLE)
 
 #compile steps
 
@@ -192,50 +116,11 @@ $(ACCELERATION_OBJ): $(ACCELERATION_SRC) $(ACCELERATION_HEADER) | $(BUILD_DIR)
 $(POSITION_GENERATOR_OBJ): $(POSITION_GENERATOR_SRC) $(POSITION_GENERATOR_HEADER) | $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) -c $(POSITION_GENERATOR_SRC) -o $(POSITION_GENERATOR_OBJ)
 
-$(MAIN_1_1_OBJ): $(MAIN_1_1_SRC) | $(BUILD_DIR)
-	$(CXX) $(CXXFLAGS) -c $(MAIN_1_1_SRC) -o $(MAIN_1_1_OBJ)
-
-$(MAIN_1_2_OBJ): $(MAIN_1_2_SRC) | $(BUILD_DIR)
-	$(CXX) $(CXXFLAGS) -c $(MAIN_1_2_SRC) -o $(MAIN_1_2_OBJ)
-
-$(MAIN_2_OBJ): $(MAIN_2_SRC) | $(BUILD_DIR)
-	$(CXX) $(CXXFLAGS) -c $(MAIN_2_SRC) -o $(MAIN_2_OBJ)
-
-$(MAIN_3_OBJ): $(MAIN_3_SRC) | $(BUILD_DIR)
-	$(CXX) $(CXXFLAGS) -c $(MAIN_3_SRC) -o $(MAIN_3_OBJ)
-
-$(MAIN_4_1_OBJ): $(MAIN_4_1_SRC) | $(BUILD_DIR)
-	$(CXX) $(CXXFLAGS) -c $(MAIN_4_1_SRC) -o $(MAIN_4_1_OBJ)
-
-$(MAIN_4_2_OBJ): $(MAIN_4_2_SRC) | $(BUILD_DIR)
-	$(CXX) $(CXXFLAGS) -c $(MAIN_4_2_SRC) -o $(MAIN_4_2_OBJ)
-
-$(MAIN_4_3_OBJ): $(MAIN_4_3_SRC) | $(BUILD_DIR)
-	$(CXX) $(CXXFLAGS) -c $(MAIN_4_3_SRC) -o $(MAIN_4_3_OBJ)
-
-$(MAIN_5_1_OBJ): $(MAIN_5_1_SRC) | $(BUILD_DIR)
-	$(CXX) $(CXXFLAGS) -c $(MAIN_5_1_SRC) -o $(MAIN_5_1_OBJ)
-
-$(MAIN_5_2_OBJ): $(MAIN_5_2_SRC) | $(BUILD_DIR)
-	$(CXX) $(CXXFLAGS) -c $(MAIN_5_2_SRC) -o $(MAIN_5_2_OBJ)
-
-$(MAIN_6_OBJ): $(MAIN_6_SRC) | $(BUILD_DIR)
-	$(CXX) $(CXXFLAGS) -c $(MAIN_6_SRC) -o $(MAIN_6_OBJ)
-
-$(MAIN_7_OBJ): $(MAIN_7_SRC) | $(BUILD_DIR)
-	$(CXX) $(CXXFLAGS) -c $(MAIN_7_SRC) -o $(MAIN_7_OBJ)
-
 $(MAIN_HORIZONTAL_OBJ): $(MAIN_HORIZONTAL_SRC) | $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) -c $(MAIN_HORIZONTAL_SRC) -o $(MAIN_HORIZONTAL_OBJ)
 
-$(MAIN_VERTICAL_OBJ): $(MAIN_VERTICAL_SRC) | $(BUILD_DIR)
-	$(CXX) $(CXXFLAGS) -c $(MAIN_VERTICAL_SRC) -o $(MAIN_VERTICAL_OBJ)
-
 $(MAIN_CIRCULAR_OBJ): $(MAIN_CIRCULAR_SRC) | $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) -c $(MAIN_CIRCULAR_SRC) -o $(MAIN_CIRCULAR_OBJ)
-
-$(MAIN_MULTIPLE_OBJ): $(MAIN_MULTIPLE_SRC) | $(BUILD_DIR)
-	$(CXX) $(CXXFLAGS) -c $(MAIN_MULTIPLE_SRC) -o $(MAIN_MULTIPLE_OBJ)
 
 
 clean:
@@ -244,16 +129,7 @@ clean:
 tests: $(ALL_BINS)
 
 execute_tests: 
-	./$(BIN_1_1) && python3 $(SCRIPTS_DIR)/Plots_1source_1mic.py
-	./$(BIN_1_2) && python3 $(SCRIPTS_DIR)/Plots_1source_2mics.py
-	./$(BIN_2)   && python3 $(SCRIPTS_DIR)/Plots_2sources_1mic.py
-	./$(BIN_3)   && python3 $(SCRIPTS_DIR)/Plots_2sources_1mic.py
-	./$(BIN_4_1) && python3 $(SCRIPTS_DIR)/Plots_1source_1mic.py
-	./$(BIN_4_2) && python3 $(SCRIPTS_DIR)/Plots_1source_1mic.py
-	./$(BIN_4_3) && python3 $(SCRIPTS_DIR)/Plots_1source_1mic.py
-	./$(BIN_5_1) && python3 $(SCRIPTS_DIR)/Plots_1source_1mic.py
-	./$(BIN_5_2) && python3 $(SCRIPTS_DIR)/Plots_1source_1mic.py
-	./$(BIN_6)   && python3 $(SCRIPTS_DIR)/Plots_1source_1mic.py
-	./$(BIN_7)   && python3 $(SCRIPTS_DIR)/Plots_1source_1mic.py
+	./$(BIN_HORIZONTAL) && python3 $(SCRIPTS_DIR)/Plots_1source_1mic.py && python3 $(SCRIPTS_DIR)/Horizontal.py
+	./$(BIN_CIRCULAR)   && python3 $(SCRIPTS_DIR)/Plots_1source_1mic.py && python3 $(SCRIPTS_DIR)/Circular.py
     
 -include $(wildcard $(BUILD_DIR)/*.d)
