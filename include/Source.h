@@ -29,7 +29,3 @@ class Source : public PhysicalObject {
 
 #endif // SOURCE.H
 
-    double getBufferSize() const;
-};
-
-#endif // SOURCE.H
