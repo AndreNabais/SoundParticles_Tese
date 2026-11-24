@@ -2,7 +2,6 @@
 #define ACCELERATION_H
 
 #include "Position.h"
-#include "PhysicalObject.h"
 
 //forward declaration of the Source and Microphone classes
 class Source;
@@ -17,7 +16,7 @@ struct Acceleration {
     Acceleration(float x_, float y_, float z_) : x(x_), y(y_), z(z_) {}
 };
 
-Acceleration Acceleration_source(Source& source, int i);
-Acceleration Acceleration_microphone(Source& source, Microphone& mic, int i);
+Acceleration Acceleration_source(Source& source, int i, int Sample_rate);
+Acceleration Acceleration_microphone(Source& source, Microphone& mic, int i, int Sample_rate);
 
 #endif // ACCELERATION_H
