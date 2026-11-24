@@ -10,19 +10,24 @@ class Source : public PhysicalObject {
     double frequency;
     int SampleRate;
     int bufferSize;
-    float referenceLevel; //reference sound pressure level in dB
-    float referenceDistance; //reference distance from the source to the point that has the referenceLevel sound pressure
     std::vector<float> signal;
 
     public:
     //constructor
-    Source(double amp, double freq, int sr, int bs, float initX, float initY, float initZ);
-    
+    Source(std::unique_ptr<Position_generator> start_pos, double amp, double freq, int sr, int bs);
+
+    void SignalGenerator(Source& sources_vec, float n);
+
     float getSignalSample(int n) const;
 
-    Position getPositionSample(int n) const;
+    float getAmplitude() const;
 
     double getSampleRate() const;
+
+    double getBufferSize() const;
+};
+
+#endif // SOURCE.H
 
     double getBufferSize() const;
 };
