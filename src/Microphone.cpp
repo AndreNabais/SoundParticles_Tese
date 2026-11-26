@@ -74,7 +74,7 @@ void Microphone::update_recv_sound(const std::vector<Source>& sources_vec, int c
     float prev_distance_check = 0.0f; // previous value of distance_check to detect when the sound has reached the mic
 
     float sound_distance = 0.0f; //distance the sound travels from the source at emitted_sample to the mic at current_sample
-    float prev_sound_distance = 0.0f; // previous value of sound_distance to detect when the sound has reached the mic
+    //float prev_sound_distance = 0.0f; // previous value of sound_distance to detect when the sound has reached the mic
 
     float arrival_time = 0.0f; // time when the sound from the source sample reaches the mic sample
     float prev_arrival_time = 0.0f; // previous value of arrival_time to detect when the sound has reached the mic
@@ -108,8 +108,8 @@ void Microphone::update_recv_sound(const std::vector<Source>& sources_vec, int c
                 lowest_sample = current_sample - static_cast<int>(max_delay_samples);
             }
         }
-        // calcular um vector com todas as posicoes do source para todos os samples do buffer, para evitar recalcular a posição do source para cada sample do mic
-        float carried_distance = Distance_source_microphone(source, mic_pos_now, current_sample, Sample_Rate);
+
+        float carried_distance = Distance_source_microphone(source.getSourcePositions()[current_sample], mic_pos_now);
 
         // emitted_sample is the sample index of the source's buffer that we are currently checking if it has reached the microphone. we start from the current sample of the microphone and go backwards in time to find the source sample that corresponds to the sound arriving at the microphone now.
         for (int emitted_sample = current_sample; emitted_sample >= lowest_sample ; emitted_sample--){
@@ -119,8 +119,8 @@ void Microphone::update_recv_sound(const std::vector<Source>& sources_vec, int c
             prev_source_time = static_cast<float>(emitted_sample - 1) / static_cast<float>(Sample_Rate);
             distance_check = carried_distance;
             sound_distance = c*(mic_time - source_time); 
-            prev_sound_distance = c*(mic_time - prev_source_time);
-            prev_distance_check = Distance_source_microphone(source, mic_pos_now, emitted_sample - 1, Sample_Rate); //usar index do vetor
+            //prev_sound_distance = c*(mic_time - prev_source_time);
+            prev_distance_check = Distance_source_microphone(source.getSourcePositions()[emitted_sample - 1], mic_pos_now); //usar index do vetor
             carried_distance = prev_distance_check; // update the carried distance for the next iteration
 
             //offset parameter is created to check how many mic samples away the sound from the source sample is from the current mic sample.
@@ -163,7 +163,7 @@ void Microphone::update_recv_sound(const std::vector<Source>& sources_vec, int c
             //only emissions that do land here get the expensive work
 
             //directional gain based on the polar pattern of the microphone
-            src_pos_emit = source.getPosition(source_time);
+            src_pos_emit = source.getSourcePositions()[emitted_sample]; //position of the source at the time of emission
             gain = directional_gain(src_pos_emit, mic_pos_now);
 
             //Attenuation
@@ -210,3 +210,4 @@ void Microphone::update_recv_sound(const std::vector<Source>& sources_vec, int c
         }
     }
 }
+
