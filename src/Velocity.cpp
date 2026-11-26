@@ -39,6 +39,3 @@ float Velocity_Magnitude(const Velocity& v) {
 }
 
 
-float Velocity_Magnitude(const Velocity& v) {
-    return sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
-}
