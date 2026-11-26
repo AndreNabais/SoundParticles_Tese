@@ -26,11 +26,10 @@ float Microphone_Displacement(const Microphone& mic, int i, int Sample_rate) {
 
 }
 
-
-float Distance_source_microphone(const Source& source, const Position& mic_pos, int i, int Sample_rate) {
+float Distance_source_microphone(const Position& src_pos, const Position& mic_pos) {
     // distance from the source at sample i to the mic position
 
-    Position src_pos = source.getPosition(static_cast<float>(i) / static_cast<float>(Sample_rate)); 
+    // Position src_pos = source.getPosition(static_cast<float>(i) / static_cast<float>(Sample_rate)); 
 
     float dx = mic_pos.x - src_pos.x;
     float dy = mic_pos.y - src_pos.y;
