@@ -24,13 +24,18 @@ Velocity Velocity_microphone(Source& source, Microphone& mic,  int i, int Sample
 }
 
 
-float Closing_velocity_instant(const Source& source, const Position& mic_pos, int i, int Sample_rate) {
+float Closing_velocity_instant(const Position& src_pos, const Position& mic_pos, const Position& prev_src_pos, const Position& prev_mic_pos, int Sample_rate) {
 
-    float distance_instant = Distance_source_microphone(source, mic_pos, i, Sample_rate);
-    float distance_previous = Distance_source_microphone(source, mic_pos, i-1, Sample_rate);
+    float distance_instant = Distance_source_microphone(src_pos, mic_pos);
+    float distance_previous = Distance_source_microphone(prev_src_pos, prev_mic_pos);
 
     float closing_v_instant = (distance_previous - distance_instant) * Sample_rate; //relative velocity between source and microphone. positive if approaching, negative if moving away. This is the rate of change of distance between source and microphone in m/s
     return closing_v_instant;
+}
+
+
+float Velocity_Magnitude(const Velocity& v) {
+    return sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 }
 
 
