@@ -72,10 +72,17 @@ int main(){
                 //mic_vec[0].setPolarPattern(PolarPattern::Cardioid, Position{1.0, 0.0f, 0.0f});
 
                 float observed_frequency;
-                float closing_v_instant = Closing_velocity_instant(sources_vec[j], mic_vec[k].getPosition(time), i, SampleRate); 
-                float closing_v_previous = Closing_velocity_instant(sources_vec[j], mic_vec[k].getPosition(time - 1.0f / SampleRate), i-1, SampleRate); 
                 // closing_v_instant > 0  → distance shrinking → source or microphone approaching
                 // closing_v_instant < 0  → distance growing  → source or microphone receding
+                float closing_v_instant = 0.0f;
+                if (i > 1) {
+                    closing_v_instant = Closing_velocity_instant(sources_vec[j].getSourcePositions()[i], mic_vec[k].getPosition(static_cast<float>(i)/static_cast<float>(SampleRate)), sources_vec[j].getSourcePositions()[i-1], mic_vec[k].getPosition(static_cast<float>(i-1)/static_cast<float>(SampleRate)), SampleRate); 
+                }
+
+                float closing_v_previous = 0.0f;
+                if (i > 2) {
+                    closing_v_previous = Closing_velocity_instant(sources_vec[j].getSourcePositions()[i-1], mic_vec[k].getPosition(static_cast<float>(i-1)/static_cast<float>(SampleRate)), sources_vec[j].getSourcePositions()[i-2], mic_vec[k].getPosition(static_cast<float>(i-2)/static_cast<float>(SampleRate)), SampleRate);
+                }
 
 
                 if (i==1){
