@@ -33,6 +33,7 @@ class Microphone : public PhysicalObject {
     std::vector<float> root_emit_time;
     std::vector<float> root_arrival_time;
     std::vector<float> root_derivative;
+
 };
 
 #endif // MICROPHONE.H
