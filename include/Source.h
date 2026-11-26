@@ -11,6 +11,7 @@ class Source : public PhysicalObject {
     int SampleRate;
     int bufferSize;
     std::vector<float> signal;
+    std::vector<Position> source_positions; // Vector to store the positions of the source for each sample in the buffer
 
     public:
     //constructor
@@ -25,7 +26,8 @@ class Source : public PhysicalObject {
     double getSampleRate() const;
 
     double getBufferSize() const;
+
+    const std::vector<Position>& getSourcePositions() const;
 };
 
 #endif // SOURCE.H
-
