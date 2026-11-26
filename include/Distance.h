@@ -10,6 +10,6 @@ class Microphone;
 
 float Source_Displacement(const Source& source, int i, int Sample_rate);
 float Microphone_Displacement(const Microphone& mic, int i, int Sample_rate);
-float Distance_source_microphone(const Source& source, const Position& mic_pos, int i, int Sample_rate);
+float Distance_source_microphone(const Position& src_pos, const Position& mic_pos);
 
 #endif // DISTANCE_H
