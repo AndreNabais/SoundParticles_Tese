@@ -8,6 +8,11 @@
     Source::Source(std::unique_ptr<Position_generator> start_pos, double amp, double freq, int sr, int bs)
     : PhysicalObject(std::move(start_pos)), Amplitude(amp), frequency(freq), SampleRate(sr), bufferSize(bs) {
         signal.resize(bufferSize);
+        source_positions.resize(bufferSize); // Resize the vector to hold positions for each sample in the buffer
+        for (int i = 0; i < bufferSize; i++) {
+            float source_time_i = static_cast<float>(i) / static_cast<float>(SampleRate);
+            source_positions[i] = getPosition(source_time_i); // Store the position of the source for each sample in the buffer
+        }
     }
 
     void Source::SignalGenerator(Source& sources_vec, float n) {
@@ -32,4 +37,8 @@
 
     double Source::getBufferSize() const{
         return bufferSize;
+    }
+
+    const std::vector<Position>& Source::getSourcePositions() const {
+        return source_positions;
     }
