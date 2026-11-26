@@ -18,7 +18,7 @@ struct Velocity {
 
 Velocity Velocity_source(Source& source, int i, int Sample_rate);
 Velocity Velocity_microphone(Source& source, Microphone& mic, int i, int Sample_rate);
-float Closing_velocity_instant(const Source& source, const Position& mic_pos, int i, int Sample_rate);
+float Closing_velocity_instant(const Position& src_pos, const Position& mic_pos, const Position& prev_src_pos, const Position& prev_mic_pos, int Sample_rate);
 float Velocity_Magnitude(const Velocity& v);
 
 #endif // VELOCITY_H
